@@ -11,7 +11,7 @@ import { parseAbiItem } from "viem"
 
 import { contractAddress, contractAbi } from "@/constants";
 
-const Proposal = ({ workflowStatus}) => {
+const Proposal = ({ workflowStatus, proposals, setProposals}) => {
 
     const { address } = useAccount();
     const { toast } = useToast()
@@ -19,7 +19,6 @@ const Proposal = ({ workflowStatus}) => {
 
     const { data: hash, isPending, error, writeContract } = useWriteContract()
 
-    const [proposals, setProposals] = useState([])
 
     const getProposals = async() => {
         const proposalsFetch = await publicClient.getLogs({

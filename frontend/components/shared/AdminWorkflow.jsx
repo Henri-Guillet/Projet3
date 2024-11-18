@@ -7,7 +7,7 @@ const AdminWorkflow = ({ workflowStatus, phaseMapping, setWorkflowStatus }) => {
 
 
   return (
-    <Card className="max-w-md">
+    <Card>
       <CardHeader>
         <CardTitle>Admin Workflow</CardTitle>
         <CardDescription>Manage voting workflow</CardDescription>

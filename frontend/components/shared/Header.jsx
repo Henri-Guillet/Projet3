@@ -1,17 +1,22 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { ModeToggle } from "./ModeToggle"
-
+import { ModeToggle } from "./ModeToggle";
 
 const Header = () => {
   return (
-    <nav className="flex justify-between items-center p-10">
-        <div className="grow">Logo</div>
-        <div className="flex items-center gap-3">
-            <ModeToggle />
-            <ConnectButton />
-        </div>
+    <nav className="flex justify-between items-center bg-gray-100 dark:bg-gray-800 shadow-md px-8 py-4">
+      {/* Logo section */}
+      <div className="text-2xl font-bold text-indigo-600 dark:text-indigo-400 flex items-center">
+        <span className="mr-2">🚀</span>
+        AlyraVote
+      </div>
+
+      {/* Right actions */}
+      <div className="flex items-center gap-4">
+        <ModeToggle />
+        <ConnectButton />
+      </div>
     </nav>
-  )
-}
+  );
+};
 
 export default Header;
