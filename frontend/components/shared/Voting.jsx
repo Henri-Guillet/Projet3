@@ -1,5 +1,6 @@
 'use client'
 import AdminWorkflow from './AdminWorkflow'
+import Vote from './Vote'
 import { useState, useEffect } from "react"
 import { useAccount, useReadContract } from "wagmi"
 import { contractAddress, contractAbi } from "@/constants"
@@ -31,9 +32,21 @@ const Voting = () => {
     functionName: 'owner',
   });
 
+  // Display Vote component only when needed
+  const { data: voterStruct } = useReadContract({
+    address: contractAddress,
+    abi: contractAbi,
+    functionName: 'getVoter',
+    args: [address],
+  });
+
+
   return (
     <div>
-      {address == ownerAddress? (<AdminWorkflow workflowStatus={workflowStatus} setWorkflowStatus={setWorkflowStatus} phaseMapping={phaseMapping}/>) : null}
+      {address == ownerAddress? 
+      (<AdminWorkflow workflowStatus={workflowStatus} setWorkflowStatus={setWorkflowStatus} phaseMapping={phaseMapping}/>) 
+      : null}
+      {voterStruct?.isRegistered && workflowStatus=== 4? <Vote /> : null}
       <Proposal workflowStatus={workflowStatus} />
     </div>
   )
