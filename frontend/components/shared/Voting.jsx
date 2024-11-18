@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { useAccount, useReadContract } from "wagmi"
 import { contractAddress, contractAbi } from "@/constants"
 import phaseMapping from "@/constants/phaseMapping";
+import Proposal from './Proposal'
 
 const Voting = () => {
 
@@ -33,6 +34,7 @@ const Voting = () => {
   return (
     <div>
       {address == ownerAddress? (<AdminWorkflow workflowStatus={workflowStatus} setWorkflowStatus={setWorkflowStatus} phaseMapping={phaseMapping}/>) : null}
+      <Proposal workflowStatus={workflowStatus} />
     </div>
   )
 }

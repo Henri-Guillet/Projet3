@@ -11,7 +11,7 @@ import { parseAbiItem } from "viem"
 
 import { contractAddress, contractAbi } from "@/constants";
 
-const Proposal = () => {
+const Proposal = ({ workflowStatus}) => {
 
     const { address } = useAccount();
     const { toast } = useToast()
@@ -31,6 +31,7 @@ const Proposal = () => {
         setProposals(proposalsFetch);
     }
     const addProposal = async() => {
+        console.log("add proposal is called");
         if((proposalName).length !==0) {
             writeContract({
                 address: contractAddress,
@@ -65,12 +66,17 @@ const Proposal = () => {
 
     return (
         <>
-            <h2 className="text-4xl font-extrabold mb-4">Add Proposal</h2>
-            <div className="flex items-center">
-                <Input placeholder="Proposal Description" onChange={(e) => setProposalName(e.target.value)} value={proposalName} />
-                <Button onClick={addProposal} className="hover:bg-gray-600 bg-gray-700 text-white">Add Proposal</Button>
+        {workflowStatus == 1 ?
+(
+            <div>
+                <h2 className="text-4xl font-extrabold mb-4">Add Proposal</h2>
+                <div className="flex items-center">
+                    <Input placeholder="Proposal Description" onChange={(e) => setProposalName(e.target.value)} value={proposalName} />
+                    <Button onClick={addProposal} className="hover:bg-gray-600 bg-gray-700 text-white">Add Proposal</Button>
+                </div>
             </div>
-            {console.log(proposals)}
+    ):null}
+
             <h2 className="text-4xl font-extrabold mb-4">Proposals</h2>
             <div className="flex items-center">
 
