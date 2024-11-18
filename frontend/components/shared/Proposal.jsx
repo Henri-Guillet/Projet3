@@ -8,6 +8,8 @@ import { useToast } from "@/hooks/use-toast"
 
 import { useWriteContract, useWaitForTransactionReceipt, useAccount, useReadContract } from 'wagmi'
 import { parseAbiItem } from "viem"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+
 
 import { contractAddress, contractAbi } from "@/constants";
 
@@ -63,34 +65,55 @@ const Proposal = ({ workflowStatus, proposals, setProposals}) => {
 
 
 
+    const { data: winningProposal } = useReadContract({
+        address: contractAddress,
+        abi: contractAbi,
+        functionName: 'getOneProposal',
+        args: [1n]
+    })
+
+
+{winningProposal ? console.log("result is " + winningProposal.description) : console.log("nothing to show")};
     return (
         <>
         {workflowStatus == 1 ?
 (
+    <Card className="max-w-md">
+    <CardHeader>
+      <CardTitle>Add Proposal</CardTitle>
+      <CardDescription>Add a proposal that can be voted</CardDescription>
+    </CardHeader>
+    <CardContent>
             <div>
-                <h2 className="text-4xl font-extrabold mb-4">Add Proposal</h2>
                 <div className="flex items-center">
                     <Input placeholder="Proposal Description" onChange={(e) => setProposalName(e.target.value)} value={proposalName} />
-                    <Button onClick={addProposal} className="hover:bg-gray-600 bg-gray-700 text-white">Add Proposal</Button>
+                    <Button onClick={addProposal}>Add Proposal</Button>
                 </div>
             </div>
+            </CardContent>
+            </Card>
     ):null}
 
-            <h2 className="text-4xl font-extrabold mb-4">Proposals</h2>
+<Card className="max-w-md">
+    <CardHeader>
+      <CardTitle>Proposals</CardTitle>
+    </CardHeader>
             <div className="flex items-center">
-
             <div className="container">
             <table className="table table-striped table-bordered">
                 <tbody>
                     {proposals.map(proposal =>
+                        <CardContent>
                         <tr key={proposal.args.proposalId}>
                             <td>{proposal.args.description}</td>
                         </tr>
+                        </CardContent>
                     )}
                 </tbody>
             </table>
         </div>
             </div>
+            </Card>
         </>
     )
 }
