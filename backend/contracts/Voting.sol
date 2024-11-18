@@ -36,7 +36,7 @@ contract Voting is Ownable {
 
     event VoterRegistered(address voterAddress); 
     event WorkflowStatusChange(WorkflowStatus previousStatus, WorkflowStatus newStatus);
-    event ProposalRegistered(uint proposalId);
+    event ProposalRegistered(uint proposalId, string description);
     event Voted (address voter, uint proposalId);
 
     constructor() Ownable(msg.sender) {    }
@@ -81,7 +81,7 @@ contract Voting is Ownable {
         proposal.description = _desc;
         proposalsArray.push(proposal);
         // proposalsArray.push(Proposal(_desc,0));
-        emit ProposalRegistered(proposalsArray.length-1);
+        emit ProposalRegistered(proposalsArray.length-1, _desc);
     }
 
     // ::::::::::::: VOTE ::::::::::::: //
