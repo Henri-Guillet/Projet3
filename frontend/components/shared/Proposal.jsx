@@ -13,7 +13,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 
 import { contractAddress, contractAbi } from "@/constants";
 
-const Proposal = ({ workflowStatus, proposals, setProposals}) => {
+const Proposal = ({ workflowStatus, proposals, setProposals }) => {
 
     const { address } = useAccount();
     const { toast } = useToast()
@@ -22,25 +22,25 @@ const Proposal = ({ workflowStatus, proposals, setProposals}) => {
     const { data: hash, isPending, error, writeContract } = useWriteContract()
 
 
-    const getProposals = async() => {
+    const getProposals = async () => {
         const proposalsFetch = await publicClient.getLogs({
-          address: contractAddress,
-          event: parseAbiItem('event ProposalRegistered(uint proposalId, string description)'),
-          fromBlock: 0n,
-          toBlock: 'latest'
+            address: contractAddress,
+            event: parseAbiItem('event ProposalRegistered(uint proposalId, string description)'),
+            fromBlock: 2770055n,
+            toBlock: 'latest'
         })
         setProposals(proposalsFetch);
     }
-    const addProposal = async() => {
+    const addProposal = async () => {
         console.log("add proposal is called");
-        if((proposalName).length !==0) {
+        if ((proposalName).length !== 0) {
             writeContract({
                 address: contractAddress,
                 abi: contractAbi,
                 functionName: 'addProposal',
                 args: [proposalName],
                 account: address
-            }) 
+            })
         }
         else {
             toast({
@@ -52,12 +52,12 @@ const Proposal = ({ workflowStatus, proposals, setProposals}) => {
     }
 
     const { isLoading: isConfirming, isSuccess: isConfirmed } =
-    useWaitForTransactionReceipt({
-      hash,
-    })
+        useWaitForTransactionReceipt({
+            hash,
+        })
 
     useEffect(() => {
-        if(isConfirmed) {
+        if (isConfirmed) {
             setProposalName('');
         }
         getProposals();
@@ -65,55 +65,42 @@ const Proposal = ({ workflowStatus, proposals, setProposals}) => {
 
 
 
-    const { data: winningProposal } = useReadContract({
-        address: contractAddress,
-        abi: contractAbi,
-        functionName: 'getOneProposal',
-        args: [1n]
-    })
-
-
-{winningProposal ? console.log("result is " + winningProposal.description) : console.log("nothing to show")};
     return (
         <>
-        {workflowStatus == 1 ?
-(
-    <Card className="max-w-md">
-    <CardHeader>
-      <CardTitle>Add Proposal</CardTitle>
-      <CardDescription>Add a proposal that can be voted</CardDescription>
-    </CardHeader>
-    <CardContent>
-            <div>
-                <div className="flex items-center">
-                    <Input placeholder="Proposal Description" onChange={(e) => setProposalName(e.target.value)} value={proposalName} />
-                    <Button onClick={addProposal}>Add Proposal</Button>
-                </div>
-            </div>
-            </CardContent>
-            </Card>
-    ):null}
-
-<Card className="max-w-md">
-    <CardHeader>
-      <CardTitle>Proposals</CardTitle>
-    </CardHeader>
-            <div className="flex items-center">
-            <div className="container">
-            <table className="table table-striped table-bordered">
-                <tbody>
-                    {proposals.map(proposal =>
+            {workflowStatus == 1 ?
+                (
+                    <Card >
+                        <CardHeader>
+                            <CardTitle>Add Proposal</CardTitle>
+                            <CardDescription>Add a proposal that can be voted</CardDescription>
+                        </CardHeader>
                         <CardContent>
-                        <tr key={proposal.args.proposalId}>
-                            <td>{proposal.args.description}</td>
-                        </tr>
+                            <div>
+                                <div className="flex items-center gap-4">
+                                    <Input placeholder="Proposal Description" onChange={(e) => setProposalName(e.target.value)} value={proposalName} />
+                                    <Button onClick={addProposal}>Add Proposal</Button>
+                                </div>
+                            </div>
                         </CardContent>
-                    )}
-                </tbody>
-            </table>
-        </div>
-            </div>
-            </Card>
+                    </Card>
+                ) : null}
+
+            <Card >
+                <CardHeader>
+                    <CardTitle>List of Proposals</CardTitle>
+                </CardHeader>
+
+                <CardContent>
+                    <ul className="list-disc list-inside space-y-2">
+                        {proposals.map((proposal) => (
+                            <li key={proposal.args.proposalId.toString()} className="p-2 bg-gray-100 dark:bg-gray-800 rounded-md">
+                                {proposal.args.description}
+                            </li>
+                        ))}
+                    </ul>
+                </CardContent>
+
+            </Card >
         </>
     )
 }

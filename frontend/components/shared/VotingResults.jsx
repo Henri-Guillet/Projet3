@@ -2,20 +2,24 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { contractAddress, contractAbi } from "@/constants"
 import { useState, useEffect } from "react"
-import { useReadContract } from "wagmi"
+import { useAccount, useReadContract } from "wagmi"
 
 const VotingResults = () => {
+
+    const { address } = useAccount()
 
     const { data: winningProposalId } = useReadContract({
         address: contractAddress,
         abi: contractAbi,
-        functionName: 'winningProposalID'
+        functionName: 'winningProposalID',
+        account: address
     })
 
     const { data: winningProposal } = useReadContract({
         address: contractAddress,
         abi: contractAbi,
         functionName: 'getOneProposal',
+        account: address,
         args: [winningProposalId]
     })
 

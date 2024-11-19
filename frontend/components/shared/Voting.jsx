@@ -12,13 +12,15 @@ const Voting = () => {
 
   const { address } = useAccount()
   const [proposals, setProposals] = useState([])
+  const [isVoterRegistered, setIsVoterRegistered] = useState(false)
 
   // Workflow Status
   const [workflowStatus, setWorkflowStatus] = useState(null)
   const { data: fetchedWorkflowStatus } = useReadContract({
     address: contractAddress,
     abi: contractAbi,
-    functionName: 'workflowStatus'
+    functionName: 'workflowStatus',
+    account: address
   })
 
   useEffect(() => {
@@ -32,15 +34,25 @@ const Voting = () => {
     address: contractAddress,
     abi: contractAbi,
     functionName: 'owner',
+    account: address
   });
 
-  // Display Vote component only when needed
-  const { data: voterStruct } = useReadContract({
+  // Retrieve Voter Struct
+  const { data: voterStruct} = useReadContract({
     address: contractAddress,
     abi: contractAbi,
     functionName: 'getVoter',
-    args: [address],
+    account: address,
+    args: [address]
   });
+
+
+
+  useEffect(() => {
+    if (voterStruct?.isRegistered) {
+      setIsVoterRegistered(true)
+    }
+  }, [voterStruct])
 
 
   return (
@@ -63,7 +75,7 @@ const Voting = () => {
         />
       </div>
 
-      {voterStruct?.isRegistered && workflowStatus === 3 ? (
+      {workflowStatus === 3 ? (
         <div className="col-span-1">
           <Vote proposals={proposals} />
         </div>
